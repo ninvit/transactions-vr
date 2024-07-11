@@ -23,41 +23,14 @@ public class CartaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cartao> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Cartao> buscarSaldoPorId(@PathVariable Long id) {
         Optional<Cartao> cartaoOptional = cartaoRepository.findById(id);
         return cartaoOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Cartao> salvarCartao(@RequestBody Cartao cartao) {
-        // Definindo saldo inicial como 500
-        cartao.setSaldo(500.0);
         Cartao novoCartao = cartaoRepository.save(cartao);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Cartao> atualizarCartao(@PathVariable Long id, @RequestBody Cartao cartaoAtualizado) {
-        Optional<Cartao> cartaoOptional = cartaoRepository.findById(id);
-        if (cartaoOptional.isPresent()) {
-            Cartao cartaoExistente = cartaoOptional.get();
-            cartaoExistente.setNumeroCartao(cartaoAtualizado.getNumeroCartao());
-            cartaoExistente.setSenha(cartaoAtualizado.getSenha());
-            Cartao cartaoAtualizadoDb = cartaoRepository.save(cartaoExistente);
-            return ResponseEntity.ok(cartaoAtualizadoDb);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCartao(@PathVariable Long id) {
-        Optional<Cartao> cartaoOptional = cartaoRepository.findById(id);
-        if (cartaoOptional.isPresent()) {
-            cartaoRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 }
