@@ -15,10 +15,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Cartao {
     @Id
+    @GeneratedValue
+    private Long id;
     private Long numeroCartao;
     private String senha;
     private double saldo = 500.0; // Inicializando o saldo com 500
 
-    public Cartao(String numeroCartao, String senha) {
+    public Cartao(Long numeroCartao, String senha) {
     }
 }
