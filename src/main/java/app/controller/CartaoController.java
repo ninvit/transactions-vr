@@ -1,13 +1,14 @@
 package app.controller;
 
-import app.domain.dto.TransacaoDTO;
-import app.domain.model.Cartao;
+import app.dto.TransacaoDTO;
+import app.exception.CartaoExistenteException;
+import app.model.Cartao;
 import app.service.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.domain.repository.CartaoRepository;
+import app.repository.CartaoRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,14 +33,22 @@ public class CartaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Cartao> salvarCartao(@RequestBody Cartao cartao) {
-        Cartao novoCartao = cartaoRepository.save(cartao);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
+    public ResponseEntity<?> salvarCartao(@RequestBody Cartao cartao) {
+        try {
+            cartaoService.salvarCartao(cartao);
+            return ResponseEntity.status(HttpStatus.CREATED).body(cartao);
+        } catch (CartaoExistenteException e) {
+            // Cartão já existe, retornar Status Code 422 com os detalhes do cartão existente
+            Cartao cartaoExistente = e.getCartaoExistente();
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(String.format("{\"senha\": \"%s\", \"numeroCartao\": \"%s\"}",
+                            cartaoExistente.getSenha(), cartaoExistente.getNumeroCartao()));
+        }
     }
 
-    @PostMapping("/transacao")
+    @PutMapping("/transacao")
     public ResponseEntity<String> efetuarTransacao(@RequestBody TransacaoDTO transacaoDTO) {
         cartaoService.efetuarTransacao(transacaoDTO);
-        return ResponseEntity.ok("Transação realizada com sucesso.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
     }
 }

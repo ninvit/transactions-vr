@@ -1,4 +1,4 @@
-package app.domain.model;
+package app.model;
 
 import app.enums.ErroTransacao;
 import app.exception.SaldoInsuficienteException;
@@ -25,9 +25,6 @@ public class Cartao {
     private Long numeroCartao;
     private String senha;
     private double saldo = 500.0; // Inicializando o saldo com 500
-
-    @Version
-    private Integer version;
 
     public void validarSenha(String senhaCartao) {
         Optional.of(this.senha)
