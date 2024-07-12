@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CartaoRepository extends JpaRepository<Cartao, Long> {
-    Optional<Cartao> findByNumeroCartao(Long numeroCartao);
+public interface CartaoRepository extends JpaRepository<Cartao, String> {
+    Optional<Cartao> findByNumeroCartao(String numeroCartao);
 }

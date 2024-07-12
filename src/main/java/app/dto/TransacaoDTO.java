@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransacaoDTO {
-    private Long numeroCartao;
+    private String numeroCartao;
     private String senha;
     private double valor;
 }

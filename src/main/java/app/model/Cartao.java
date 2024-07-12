@@ -22,9 +22,12 @@ public class Cartao {
     @Id
     @GeneratedValue
     private Long id;
-    private Long numeroCartao;
+    private String numeroCartao;
     private String senha;
     private double saldo = 500.0; // Inicializando o saldo com 500
+
+    public Cartao(String l, String number, double v) {
+    }
 
     public void validarSenha(String senhaCartao) {
         Optional.of(this.senha)

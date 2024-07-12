@@ -27,7 +27,7 @@ public class CartaoController {
     }
 
     @GetMapping("/{numeroCartao}")
-    public ResponseEntity<Cartao> buscarSaldoPorNumeroCartao(@PathVariable Long numeroCartao) {
+    public ResponseEntity<Cartao> buscarSaldoPorNumeroCartao(@PathVariable String numeroCartao) {
         Optional<Cartao> cartaoOptional = cartaoRepository.findByNumeroCartao(numeroCartao);
         return cartaoOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
