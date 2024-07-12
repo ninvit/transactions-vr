@@ -20,7 +20,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +51,7 @@ public class CartaoControllerTest {
 
         TransacaoDTO transacaoDTO = new TransacaoDTO();
         transacaoDTO.setNumeroCartao(6549873025634501L);
-        transacaoDTO.setSenhaCartao("1234");
+        transacaoDTO.setSenha("1234");
         transacaoDTO.setValor(10.0);
 
         when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.of(cartao));
@@ -74,7 +73,7 @@ public class CartaoControllerTest {
 
         TransacaoDTO transacaoDTO = new TransacaoDTO();
         transacaoDTO.setNumeroCartao(6549873025634501L);
-        transacaoDTO.setSenhaCartao("1234");
+        transacaoDTO.setSenha("1234");
         transacaoDTO.setValor(10.0);
 
         when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.of(cartao));
@@ -90,7 +89,7 @@ public class CartaoControllerTest {
     public void efetuarTransacao_cartaoNaoEncontrado() throws Exception {
         TransacaoDTO transacaoDTO = new TransacaoDTO();
         transacaoDTO.setNumeroCartao(6549873025634501L);
-        transacaoDTO.setSenhaCartao("1234");
+        transacaoDTO.setSenha("1234");
         transacaoDTO.setValor(10.0);
 
         when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.empty());
@@ -111,7 +110,7 @@ public class CartaoControllerTest {
 
         TransacaoDTO transacaoDTO = new TransacaoDTO();
         transacaoDTO.setNumeroCartao(6549873025634501L);
-        transacaoDTO.setSenhaCartao("4321");  // senha incorreta
+        transacaoDTO.setSenha("4321");  // senha incorreta
         transacaoDTO.setValor(10.0);
 
         when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.of(cartao));
