@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import app.repository.CartaoRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 public class CartaoService {

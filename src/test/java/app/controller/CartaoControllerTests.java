@@ -1,7 +1,6 @@
 package app.controller;
 
 import app.dto.TransacaoDTO;
-import app.exception.CartaoExistenteException;
 import app.model.Cartao;
 import app.repository.CartaoRepository;
 import app.service.CartaoService;
@@ -17,8 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
