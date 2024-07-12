@@ -41,7 +41,7 @@ public class CartaoController {
         Cartao cartao = cartaoRepository.findByNumeroCartao(transacaoDTO.getNumeroCartao())
                 .orElseThrow(() -> new CartaoNotFoundException("Cartão não encontrado."));
 
-        cartao.validarSenha(transacaoDTO.getSenhaCartao());
+        cartao.validarSenha(transacaoDTO.getSenha());
         cartao.debitarSaldo(transacaoDTO.getValor());
         cartaoRepository.save(cartao);
 

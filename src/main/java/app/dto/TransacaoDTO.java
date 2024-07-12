@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransacaoDTO {
     private Long numeroCartao;
-    private String senhaCartao;
+    private String senha;
     private double valor;
 }
