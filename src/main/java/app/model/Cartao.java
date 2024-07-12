@@ -1,5 +1,7 @@
 package app.model;
 
+import app.exception.SaldoInsuficienteException;
+import app.exception.SenhaIncorretaException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,6 +23,16 @@ public class Cartao {
     private String senha;
     private double saldo = 500.0; // Inicializando o saldo com 500
 
-    public Cartao(Long numeroCartao, String senha) {
+    public void validarSenha(String senhaCartao) {
+        if (!this.senha.equals(senhaCartao)) {
+            throw new SenhaIncorretaException("SENHA_INVALIDA");
+        }
+    }
+
+    public void debitarSaldo(double valor) {
+        if (this.saldo < valor) {
+            throw new SaldoInsuficienteException("SALDO_INSUFICIENTE");
+        }
+        this.saldo -= valor;
     }
 }

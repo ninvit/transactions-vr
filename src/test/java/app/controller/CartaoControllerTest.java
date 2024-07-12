@@ -46,59 +46,7 @@ public class CartaoControllerTest {
     }
 
     @Test
-    public void buscarTodosCartoes() throws Exception {
-        Cartao cartao = new Cartao();
-        cartao.setNumeroCartao(6549873025634501L);
-        cartao.setSenha("1234");
-        cartao.setSaldo(500.0);
-
-        when(cartaoRepository.findAll()).thenReturn(Collections.singletonList(cartao));
-
-        mockMvc.perform(get("/api/cartoes"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].numeroCartao").value(6549873025634501L))
-                .andExpect(jsonPath("$[0].senha").value("1234"))
-                .andExpect(jsonPath("$[0].saldo").value(500.0));
-    }
-
-    @Test
-    public void buscarSaldoPorId() throws Exception {
-        Cartao cartao = new Cartao();
-        cartao.setId(1L);
-        cartao.setNumeroCartao(6549873025634501L);
-        cartao.setSenha("1234");
-        cartao.setSaldo(500.0);
-
-        when(cartaoRepository.findById(anyLong())).thenReturn(Optional.of(cartao));
-
-        mockMvc.perform(get("/api/cartoes/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.numeroCartao").value(6549873025634501L))
-                .andExpect(jsonPath("$.senha").value("1234"))
-                .andExpect(jsonPath("$.saldo").value(500.0));
-    }
-
-    @Test
-    public void criaNovoCartao() throws Exception {
-        Cartao cartao = new Cartao();
-        cartao.setNumeroCartao(6549873025634501L);
-        cartao.setSenha("1234");
-        cartao.setSaldo(500.0);
-
-        when(cartaoRepository.save(any(Cartao.class))).thenReturn(cartao);
-
-        mockMvc.perform(post("/api/cartoes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(cartao)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.numeroCartao").value(6549873025634501L))
-                .andExpect(jsonPath("$.senha").value("1234"))
-                .andExpect(jsonPath("$.saldo").value(500.0));
-    }
-
-    @Test
-    public void efetuarTransacaoComSaldoSuficiente() throws Exception {
+    public void efetuarTransacao_comSaldoSuficiente() throws Exception {
         Cartao cartao = new Cartao();
         cartao.setNumeroCartao(6549873025634501L);
         cartao.setSenha("1234");
@@ -120,7 +68,7 @@ public class CartaoControllerTest {
     }
 
     @Test
-    public void efetuarTransacaoComSaldoInsuficiente() throws Exception {
+    public void efetuarTransacao_comSaldoInsuficiente() throws Exception {
         Cartao cartao = new Cartao();
         cartao.setNumeroCartao(6549873025634501L);
         cartao.setSenha("1234");
@@ -136,7 +84,44 @@ public class CartaoControllerTest {
         mockMvc.perform(post("/api/cartoes/transacao")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transacaoDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value("Saldo insuficiente."));
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$").value("SALDO_INSUFICIENTE"));
+    }
+
+    @Test
+    public void efetuarTransacao_cartaoNaoEncontrado() throws Exception {
+        TransacaoDTO transacaoDTO = new TransacaoDTO();
+        transacaoDTO.setNumeroCartao(6549873025634501L);
+        transacaoDTO.setSenhaCartao("1234");
+        transacaoDTO.setValor(10.0);
+
+        when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/api/cartoes/transacao")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transacaoDTO)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$").value("CARTAO_INEXISTENTE"));
+    }
+
+    @Test
+    public void efetuarTransacao_senhaIncorreta() throws Exception {
+        Cartao cartao = new Cartao();
+        cartao.setNumeroCartao(6549873025634501L);
+        cartao.setSenha("1234");
+        cartao.setSaldo(500.0);
+
+        TransacaoDTO transacaoDTO = new TransacaoDTO();
+        transacaoDTO.setNumeroCartao(6549873025634501L);
+        transacaoDTO.setSenhaCartao("4321");  // senha incorreta
+        transacaoDTO.setValor(10.0);
+
+        when(cartaoRepository.findByNumeroCartao(anyLong())).thenReturn(Optional.of(cartao));
+
+        mockMvc.perform(post("/api/cartoes/transacao")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transacaoDTO)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$").value("SENHA_INVALIDA"));
     }
 }

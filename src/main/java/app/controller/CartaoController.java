@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.dto.TransacaoDTO;
+import app.exception.CartaoNotFoundException;
 import app.model.Cartao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,22 +44,13 @@ public class CartaoController {
 
     @PostMapping("/transacao")
     public ResponseEntity<String> efetuarTransacao(@RequestBody TransacaoDTO transacaoDTO) {
-        Optional<Cartao> cartaoOptional = cartaoRepository.findByNumeroCartao(transacaoDTO.getNumeroCartao());
-        if (cartaoOptional.isPresent()) {
-            Cartao cartao = cartaoOptional.get();
-            if (cartao.getSenha().equals(transacaoDTO.getSenhaCartao())) {
-                if (cartao.getSaldo() >= transacaoDTO.getValor()) {
-                    cartao.setSaldo(cartao.getSaldo() - transacaoDTO.getValor());
-                    cartaoRepository.save(cartao);
-                    return ResponseEntity.ok("Transação realizada com sucesso.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Saldo insuficiente.");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta.");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cartão não encontrado.");
-        }
+        Cartao cartao = cartaoRepository.findByNumeroCartao(transacaoDTO.getNumeroCartao())
+                .orElseThrow(() -> new CartaoNotFoundException("Cartão não encontrado."));
+
+        cartao.validarSenha(transacaoDTO.getSenhaCartao());
+        cartao.debitarSaldo(transacaoDTO.getValor());
+        cartaoRepository.save(cartao);
+
+        return ResponseEntity.ok("Transação realizada com sucesso.");
     }
 }
