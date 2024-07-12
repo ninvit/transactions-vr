@@ -26,9 +26,6 @@ public class Cartao {
     private String senha;
     private double saldo = 500.0; // Inicializando o saldo com 500
 
-    public Cartao(String l, String number, double v) {
-    }
-
     public void validarSenha(String senhaCartao) {
         Optional.of(this.senha)
                 .filter(s -> s.equals(senhaCartao))

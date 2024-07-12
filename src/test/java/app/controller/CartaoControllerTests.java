@@ -38,49 +38,9 @@ public class CartaoControllerTests {
     @MockBean
     private CartaoService cartaoService;
 
-
-//    @Test
-//    public void testBuscarTodosCartoes() throws Exception {
-//        Cartao cartao1 = new Cartao("1234567890123456", "1234", 500.0);
-//        Cartao cartao2 = new Cartao(6543210987654321L, "5678", 800.0);
-//        List<Cartao> cartoes = Arrays.asList(cartao1, cartao2);
-//
-//        when(cartaoRepository.findAll()).thenReturn(cartoes);
-//
-//        mockMvc.perform(get("/api/cartoes")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$[0].numeroCartao").value("1234567890123456"))
-//                .andExpect(jsonPath("$[1].numeroCartao").value(6543210987654321L));
-//    }
-//
-//    @Test
-//    public void testBuscarSaldoPorNumeroCartaoExistente() throws Exception {
-//        Cartao cartao = new Cartao("1234567890123456", "1234", 500.0);
-//        when(cartaoRepository.findByNumeroCartao("1234567890123456")).thenReturn(Optional.of(cartao));
-//
-//        mockMvc.perform(get("/api/cartoes/{numeroCartao}", "1234567890123456")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.numeroCartao").value("1234567890123456"))
-//                .andExpect(jsonPath("$.senha").value("1234"))
-//                .andExpect(jsonPath("$.saldo").value(500.0));
-//    }
-//
-//    @Test
-//    public void testBuscarSaldoPorNumeroCartaoNaoExistente() throws Exception {
-//        when(cartaoRepository.findByNumeroCartao("1234567890123456")).thenReturn(Optional.empty());
-//
-//        mockMvc.perform(get("/api/cartoes/{numeroCartao}", "1234567890123456")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound());
-//    }
-
     @Test
     public void testSalvarCartaoNovo() throws Exception {
-        Cartao cartao = new Cartao("1234567890123456", "1234", 500.0);
+        Cartao cartao = new Cartao(1L,"1234567890123456", "1234", 500.0);
 
         mockMvc.perform(post("/api/cartoes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,29 +51,44 @@ public class CartaoControllerTests {
                 .andExpect(jsonPath("$.senha").value("1234"))
                 .andExpect(jsonPath("$.saldo").value(500.0));
     }
+    @Test
+    public void testBuscarTodosCartoes() throws Exception {
+        Cartao cartao1 = new Cartao(1L,"1234567890123456", "1234", 500.0);
+        Cartao cartao2 = new Cartao(1L,"1234567890123457", "5678", 800.0);
+        List<Cartao> cartoes = Arrays.asList(cartao1, cartao2);
 
-//    @Test
-//    public void testSalvarCartaoExistente() throws Exception {
-//        Cartao cartaoExistente = new Cartao("1234567890123456", "1234", 500.0);
-//
-//        doThrow(new CartaoExistenteException(cartaoExistente)).when(cartaoService).salvarCartao(any(Cartao.class));
-//
-//        mockMvc.perform(post("/api/cartoes")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{ \"numeroCartao\": \"1234567890123456\", \"senha\": \"1234\", \"saldo\": 500.0 }"))
-//                .andExpect(status().isUnprocessableEntity())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.numeroCartao").value("1234567890123456"))
-//                .andExpect(jsonPath("$.senha").value("1234"));
-//    }
-//    @Test
-//    public void testEfetuarTransacao() throws Exception {
-//        TransacaoDTO transacaoDTO = new TransacaoDTO("1234567890123456", "1234", 100.0);
-//
-//        mockMvc.perform(put("/api/cartoes/transacao")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{ \"numeroCartao\": \"1234567890123456\", \"senhaCartao\": \"1234\", \"valor\": 100.0 }"))
-//                .andExpect(status().isCreated())
-//                .andExpect(content().string("OK"));
-//    }
+        when(cartaoRepository.findAll()).thenReturn(cartoes);
+
+        mockMvc.perform(get("/api/cartoes")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].numeroCartao").value("1234567890123456"))
+                .andExpect(jsonPath("$[1].numeroCartao").value("1234567890123457"));
+    }
+
+    @Test
+    public void testBuscarSaldoPorNumeroCartaoExistente() throws Exception {
+        Cartao cartao = new Cartao(1L,"1234567890123456", "1234", 500.0);
+        when(cartaoRepository.findByNumeroCartao("1234567890123456")).thenReturn(Optional.of(cartao));
+
+        mockMvc.perform(get("/api/cartoes/{numeroCartao}", "1234567890123456")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.numeroCartao").value("1234567890123456"))
+                .andExpect(jsonPath("$.senha").value("1234"))
+                .andExpect(jsonPath("$.saldo").value(500.0));
+    }
+
+    @Test
+    public void testEfetuarTransacao() throws Exception {
+        TransacaoDTO transacaoDTO = new TransacaoDTO("1234567890123456", "1234", 100.0);
+
+        mockMvc.perform(put("/api/cartoes/transacao")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"numeroCartao\": \"1234567890123456\", \"senhaCartao\": \"1234\", \"valor\": 100.0 }"))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("OK"));
+    }
 }
