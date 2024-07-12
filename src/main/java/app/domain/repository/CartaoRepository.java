@@ -1,6 +1,6 @@
-package app.repository;
+package app.domain.repository;
 
-import app.model.Cartao;
+import app.domain.model.Cartao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

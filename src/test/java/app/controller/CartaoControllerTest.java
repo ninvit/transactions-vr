@@ -1,13 +1,12 @@
 package app.controller;
 
-import app.dto.TransacaoDTO;
-import app.model.Cartao;
-import app.repository.CartaoRepository;
+import app.domain.dto.TransacaoDTO;
+import app.domain.model.Cartao;
+import app.domain.repository.CartaoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;

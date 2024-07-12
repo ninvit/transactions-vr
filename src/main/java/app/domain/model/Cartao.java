@@ -1,4 +1,4 @@
-package app.model;
+package app.domain.model;
 
 import app.enums.ErroTransacao;
 import app.exception.SaldoInsuficienteException;

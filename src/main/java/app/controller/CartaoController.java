@@ -1,14 +1,13 @@
 package app.controller;
 
-import app.dto.TransacaoDTO;
-import app.exception.CartaoNotFoundException;
-import app.model.Cartao;
+import app.domain.dto.TransacaoDTO;
+import app.domain.model.Cartao;
 import app.service.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.repository.CartaoRepository;
+import app.domain.repository.CartaoRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +25,9 @@ public class CartaoController {
         return cartaoRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Cartao> buscarSaldoPorNumeroCartao(@PathVariable Long id) {
-        Optional<Cartao> cartaoOptional = cartaoRepository.findById(id);
+    @GetMapping("/{numeroCartao}")
+    public ResponseEntity<Cartao> buscarSaldoPorNumeroCartao(@PathVariable Long numeroCartao) {
+        Optional<Cartao> cartaoOptional = cartaoRepository.findByNumeroCartao(numeroCartao);
         return cartaoOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
