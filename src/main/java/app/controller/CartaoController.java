@@ -3,6 +3,7 @@ package app.controller;
 import app.dto.TransacaoDTO;
 import app.exception.CartaoNotFoundException;
 import app.model.Cartao;
+import app.service.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,8 @@ public class CartaoController {
 
     @Autowired
     private CartaoRepository cartaoRepository;
-
+    @Autowired
+    private CartaoService cartaoService;
     @GetMapping
     public List<Cartao> buscarTodosCartoes() {
         return cartaoRepository.findAll();
@@ -36,15 +38,9 @@ public class CartaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
     }
 
-    @PutMapping("/transacao")
+    @PostMapping("/transacao")
     public ResponseEntity<String> efetuarTransacao(@RequestBody TransacaoDTO transacaoDTO) {
-        Cartao cartao = cartaoRepository.findByNumeroCartao(transacaoDTO.getNumeroCartao())
-                .orElseThrow(() -> new CartaoNotFoundException("Cartão não encontrado."));
-
-        cartao.validarSenha(transacaoDTO.getSenha());
-        cartao.debitarSaldo(transacaoDTO.getValor());
-        cartaoRepository.save(cartao);
-
+        cartaoService.efetuarTransacao(transacaoDTO);
         return ResponseEntity.ok("Transação realizada com sucesso.");
     }
 }

@@ -1,7 +1,16 @@
 package app.exception;
 
+import app.enums.ErroTransacao;
+
 public class SaldoInsuficienteException extends RuntimeException {
-    public SaldoInsuficienteException(String message) {
-        super(message);
+    private final ErroTransacao erro;
+
+    public SaldoInsuficienteException(ErroTransacao erro) {
+        super(erro.name());
+        this.erro = erro;
+    }
+
+    public ErroTransacao getErro() {
+        return erro;
     }
 }
