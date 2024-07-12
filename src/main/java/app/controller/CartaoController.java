@@ -36,13 +36,7 @@ public class CartaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
     }
 
-    @PutMapping
-    public ResponseEntity<Cartao> efetuarTransacao(@RequestBody Cartao cartao) {
-        Cartao novoCartao = cartaoRepository.save(cartao);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoCartao);
-    }
-
-    @PostMapping("/transacao")
+    @PutMapping("/transacao")
     public ResponseEntity<String> efetuarTransacao(@RequestBody TransacaoDTO transacaoDTO) {
         Cartao cartao = cartaoRepository.findByNumeroCartao(transacaoDTO.getNumeroCartao())
                 .orElseThrow(() -> new CartaoNotFoundException("Cartão não encontrado."));
